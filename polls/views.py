@@ -26,21 +26,29 @@ POLLS_PER_PAGE = 12
 
 
 def home(request):
-    """Ana sayfa: en yeni anketler, sayfa başına 12."""
-    polls_qs = (
+    """Ana sayfa: en yeni anketler, sayfa başına 12 + QuestionPro tarzı yan panel verileri."""
+    base_qs = (
         Poll.objects
         .filter(is_active=True)
         .select_related('author')
         .prefetch_related('options')
         .annotate(total_votes=Count('votes'))
-        .order_by('-created_at')
     )
+    polls_qs = base_qs.order_by('-created_at')
     paginator = Paginator(polls_qs, POLLS_PER_PAGE)
     page_number = request.GET.get('sayfa', 1)
     page_obj = paginator.get_page(page_number)
 
+    # Yan panel: Popüler anketler ve istatistikler
+    popular_polls = base_qs.order_by('-total_votes', '-created_at')[:4]
+    total_polls_count = Poll.objects.filter(is_active=True).count()
+    total_votes_count = Vote.objects.count()
+
     return render(request, 'polls/home.html', {
         'page_obj': page_obj,
+        'popular_polls': popular_polls,
+        'total_polls_count': total_polls_count,
+        'total_votes_count': total_votes_count,
     })
 
 

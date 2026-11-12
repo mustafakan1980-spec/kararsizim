@@ -1,79 +1,191 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load static %}
 
-{% block title %}Kararsızım — Neye karar veremiyorsun?{% endblock %}
+{% block title %}Kararsızım — Soru Sor, Topluluk Oylasın{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-bg-circle hero-circle-1"></div>
-  <div class="hero-bg-circle hero-circle-2"></div>
-  <div class="hero-content">
-    <span class="badge">Topluluğun Karar Platformu 🎯</span>
-    <h1 class="hero-title">Kararsız mı kaldın?<br>Sor, herkes oylasın 🤔</h1>
-    <p class="hero-subtitle">İki seçenek arasında mı kaldın? Sorunu paylaş, topluluk senin için oylasın.</p>
-    <div class="hero-cta">
-      <a href="{% url 'polls:create' %}" class="btn btn-primary btn-hero">＋ Hemen Anket Oluştur</a>
-    </div>
-  </div>
-</section>
+<div class="qp-layout-container">
+  <!-- Sol Ana Bölüm (Main Feed) -->
+  <main class="qp-main-column">
+    
+    <!-- 1. Üst Hero Banner (QuestionPro Tarzı) -->
+    <section class="qp-hero-banner-card">
+      <div class="qp-hero-image-wrap">
+        <img src="{% static 'images/hero_banner.jpg' %}" alt="Kararsızım Anket Şablonları" class="qp-hero-banner-img">
+        <div class="qp-banner-watermark">
+          <span class="qp-logo-badge mini">?</span>
+          <span>kararsızım</span>
+        </div>
+      </div>
+      <div class="qp-hero-text-wrap">
+        <span class="qp-tag-eyebrow">TOPLULUK ANKET PLATFORMU</span>
+        <h1 class="qp-hero-headline">Kararsız mı kaldın?<br>Sorunu paylaş, herkes oylasın!</h1>
+        <p class="qp-hero-subtext">
+          İki veya daha fazla seçenek arasında seçim yapmakta zorlanıyorsan, sorunu topluluğa bırak. Saniyeler içinde gerçek oyları topla ve en doğru kararı ver.
+        </p>
+        <div class="qp-hero-actions">
+          <a href="{% url 'polls:create' %}" class="btn btn-qp-blue btn-lg">＋ Hemen Anket Oluştur</a>
+          <a href="#nasil-calisir" class="btn btn-secondary btn-lg">Nasıl Çalışır?</a>
+        </div>
+      </div>
+    </section>
 
-<!-- Nasıl Çalışır? (3 Adım) -->
-<section class="how-it-works">
-  <div class="steps-grid">
-    <div class="step-card">
-      <div class="step-icon">💡</div>
-      <h3 class="step-title">1. Sor</h3>
-      <p class="step-desc">Aklındaki soruyu ve 2–5 seçeneği belirle, anketini saniyeler içinde aç.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-icon">📣</div>
-      <h3 class="step-title">2. Paylaş</h3>
-      <p class="step-desc">Anketin tüm toplulukla buluşsun, herkes anında oy kullanmaya başlasın.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-icon">📊</div>
-      <h3 class="step-title">3. Oyla & Gör</h3>
-      <p class="step-desc">Sonuçları canlı yüzde çubuklarıyla izle, kararsızlığı birlikte çözün.</p>
-    </div>
-  </div>
-</section>
+    <!-- 2. İkinci Görsel Kart: Memnuniyet / Topluluk Kararı (Screenshot Alt Görseli) -->
+    <section class="qp-feature-media-card">
+      <div class="qp-feature-media-img-wrap">
+        <img src="{% static 'images/survey_feedback.jpg' %}" alt="Topluluk Görüşü ve Anket Değerlendirmesi" class="qp-feature-img">
+        <div class="qp-media-overlay">
+          <span class="qp-media-badge">Canlı Topluluk Geri Bildirimi</span>
+          <h2 class="qp-media-title">Topluluğun Karar Gücünü Keşfet</h2>
+          <p class="qp-media-desc">Her oy bir fikir. Kararsızlıklarını tarafsız insanların oylarıyla anında çözüme kavuştur.</p>
+        </div>
+      </div>
+    </section>
 
-<!-- Anket Akışı -->
-<section class="polls-section">
-  <div class="polls-section-header">
-    <h2 class="section-title">En Yeni Anketler 🔥</h2>
-    <span class="polls-count">{{ page_obj.paginator.count }} anket yayında</span>
-  </div>
+    <!-- 3. Nasıl Çalışır? (3 Adım) -->
+    <section class="qp-how-section" id="nasil-calisir">
+      <div class="qp-section-title-wrap">
+        <h2 class="qp-section-title">3 Kolay Adımda Karar Ver 🚀</h2>
+        <span class="qp-section-subtitle">Hızlı, anonim ve güvenli oylama</span>
+      </div>
+      <div class="qp-steps-grid">
+        <div class="qp-step-card">
+          <div class="qp-step-number">01</div>
+          <h4 class="qp-step-heading">Sorunu Yaz</h4>
+          <p class="qp-step-paragraph">Aklındaki kararsızlığı ve 2 ile 5 arasındaki seçeneklerini belirle.</p>
+        </div>
+        <div class="qp-step-card">
+          <div class="qp-step-number">02</div>
+          <h4 class="qp-step-heading">Oylara Aç</h4>
+          <p class="qp-step-paragraph">Anketin anında tüm platformda yayımlansın ve topluluk oy versin.</p>
+        </div>
+        <div class="qp-step-card">
+          <div class="qp-step-number">03</div>
+          <h4 class="qp-step-heading">Sonucu İzle</h4>
+          <p class="qp-step-paragraph">Canlı yüzde çubuklarıyla kazanan seçeneği gerçek zamanlı gör.</p>
+        </div>
+      </div>
+    </section>
 
-  {% if page_obj.object_list %}
-    <div class="polls-grid">
-      {% for poll in page_obj %}
-        {% include 'partials/poll_card.html' with poll=poll %}
-      {% endfor %}
-    </div>
+    <!-- 4. Anket Akışı (Poll Feed) -->
+    <section class="qp-feed-section" id="populer">
+      <div class="qp-section-title-wrap">
+        <div>
+          <h2 class="qp-section-title">En Yeni Anketler</h2>
+          <span class="qp-section-subtitle">Topluluk şu an bunları oyluyor</span>
+        </div>
+        <span class="qp-badge-counter">{{ total_polls_count }} anket</span>
+      </div>
 
-    <!-- Sayfalama -->
-    {% if page_obj.has_other_pages %}
-    <div class="pagination">
-      {% if page_obj.has_previous %}
-        <a href="?sayfa={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">← Önceki</a>
+      {% if page_obj.object_list %}
+        <div class="qp-polls-grid">
+          {% for poll in page_obj %}
+            {% include 'partials/poll_card.html' with poll=poll %}
+          {% endfor %}
+        </div>
+
+        <!-- Sayfalama -->
+        {% if page_obj.has_other_pages %}
+        <div class="qp-pagination">
+          {% if page_obj.has_previous %}
+            <a href="?sayfa={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">← Önceki Sayfa</a>
+          {% endif %}
+          <span class="qp-page-info">Sayfa <strong>{{ page_obj.number }}</strong> / {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a href="?sayfa={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Sonraki Sayfa →</a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">🤔</div>
+          <p class="empty-text">Henüz anket bulunmuyor.</p>
+          <p class="empty-subtext">İlk kararsız sen ol, topluluk sana hemen fikir versin!</p>
+          <a href="{% url 'polls:create' %}" class="btn btn-qp-blue btn-sm">＋ İlk Anketi Oluştur</a>
+        </div>
       {% endif %}
-      <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}
-        <a href="?sayfa={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Sonraki →</a>
-      {% endif %}
-    </div>
-    {% endif %}
+    </section>
 
-  {% else %}
-    <!-- Boş durum -->
-    <div class="empty-state">
-      <div class="empty-icon">🤔</div>
-      <p class="empty-text">Henüz anket yok.</p>
-      <p class="empty-subtext">İlk kararsız sen ol, topluluk sana fikir versin!</p>
-      <a href="{% url 'polls:create' %}" class="btn btn-primary btn-sm">＋ İlk Anketi Oluştur</a>
+  </main>
+
+  <!-- Sağ Yan Panel (QuestionPro Tarzı Sidebar) -->
+  <aside class="qp-sidebar-column">
+    
+    <!-- 1. Turuncu CTA Kutusu (QuestionPro 'KAZANIM' Tarzı) -->
+    <div class="qp-sidebar-card qp-cta-orange-card">
+      <span class="qp-cta-eyebrow">HIZLI BAŞLANGIÇ</span>
+      <h3 class="qp-cta-heading">Kararsız mı kaldın?</h3>
+      <p class="qp-cta-desc">
+        Çevrimiçi anketini 1 dakikadan kısa sürede oluştur, topluluk oylasın ve sonucu hemen gör!
+      </p>
+      <a href="{% url 'polls:create' %}" class="btn btn-orange-pill btn-block">
+        DAHA FAZLA BİLGİ EDİN
+      </a>
     </div>
-  {% endif %}
-</section>
+
+    <!-- 2. 'RELATED ARTICLES' -> POPÜLER ANKETLER Kutusu -->
+    <div class="qp-sidebar-card">
+      <div class="qp-sidebar-header">
+        <h3 class="qp-sidebar-title">POPÜLER ANKETLER</h3>
+        <div class="qp-sidebar-line"></div>
+      </div>
+      
+      <div class="qp-related-polls-list">
+        {% for pop in popular_polls %}
+          <a href="{% url 'polls:detail' pop.pk %}" class="qp-related-item">
+            <div class="qp-related-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070E0" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div class="qp-related-content">
+              <h4 class="qp-related-question">{{ pop.question|truncatechars:50 }}</h4>
+              <span class="qp-related-meta">
+                <span>{{ pop.created_at|date:"M d, Y" }}</span>
+                <span>·</span>
+                <strong>{{ pop.total_votes }} oy</strong>
+              </span>
+            </div>
+          </a>
+        {% empty %}
+          <p class="qp-empty-sidebar">Henüz popüler anket yok.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 3. KATEGORİYE GÖRE GÖZAT / İSTATİSTİKLER -->
+    <div class="qp-sidebar-card">
+      <div class="qp-sidebar-header">
+        <h3 class="qp-sidebar-title">PLATFORM ÖZETİ</h3>
+        <div class="qp-sidebar-line"></div>
+      </div>
+
+      <div class="qp-stats-list">
+        <div class="qp-stat-row">
+          <span class="qp-stat-label">Toplam Anket</span>
+          <span class="qp-stat-val">{{ total_polls_count }}</span>
+        </div>
+        <div class="qp-stat-row">
+          <span class="qp-stat-label">Kullanılan Oy</span>
+          <span class="qp-stat-val">{{ total_votes_count }}</span>
+        </div>
+        <div class="qp-stat-row">
+          <span class="qp-stat-label">Katılım Durumu</span>
+          <span class="qp-stat-val text-success">Aktif</span>
+        </div>
+      </div>
+
+      <div class="qp-sidebar-category-box">
+        <label for="pollQuickSelect" class="qp-stat-label">Hızlı Anket Seçimi</label>
+        <select id="pollQuickSelect" class="form-input qp-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="">Anket seçin...</option>
+          {% for p in page_obj %}
+            <option value="{% url 'polls:detail' p.pk %}">{{ p.question|truncatechars:40 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+  </aside>
+</div>
 {% endblock %}
