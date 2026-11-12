@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block title %}@{{ profile_user.username }} — Profil — Kararsızım{% endblock %}
 
@@ -10,22 +11,29 @@
     </div>
     <div class="profile-info">
       <h1 class="profile-username">@{{ profile_user.username }}</h1>
-      <p class="profile-meta">
-        {{ profile_user.date_joined|date:"d F Y" }} tarihinde katıldı
-      </p>
+      <p class="profile-meta">{{ profile_user.date_joined|date:"d F Y" }} tarihinde katıldı</p>
     </div>
   </div>
 
   <div class="profile-polls-section">
-    <h2 class="section-title">Anketler</h2>
-    <div class="empty-state">
-      <div class="empty-icon">📊</div>
-      <p class="empty-text">Henüz anket yok.</p>
-      {% if user == profile_user %}
-        <p class="empty-subtext">Aklına takılan bir soru mu var? Hemen bir anket oluşturup insanlara sorabilirsin!</p>
-        <a href="/anket/yeni/" class="btn btn-primary btn-sm">＋ Anket oluştur</a>
-      {% endif %}
-    </div>
+    <h2 class="section-title">Anketler <span class="section-count">({{ polls.count }})</span></h2>
+
+    {% if polls %}
+      <div class="polls-grid">
+        {% for poll in polls %}
+          {% include 'partials/poll_card.html' with poll=poll %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <p class="empty-text">Henüz anket yok.</p>
+        {% if user == profile_user %}
+          <p class="empty-subtext">Aklına takılan bir soru mu var? Hemen bir anket oluştur!</p>
+          <a href="{% url 'polls:create' %}" class="btn btn-primary btn-sm">＋ Anket oluştur</a>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

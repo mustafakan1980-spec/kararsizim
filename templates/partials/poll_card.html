@@ -1,0 +1,21 @@
+{% load humanize %}
+
+<article class="poll-card">
+  <div class="poll-card-body">
+    <h2 class="poll-card-question">
+      <a href="{% url 'polls:detail' poll.pk %}">{{ poll.question }}</a>
+    </h2>
+    <div class="poll-card-meta">
+      <a href="{% url 'accounts:profile' poll.author.username %}" class="poll-author">@{{ poll.author.username }}</a>
+      <span class="meta-dot">·</span>
+      <span class="poll-time">{{ poll.created_at|naturaltime }}</span>
+    </div>
+    <div class="poll-card-stats">
+      <span class="stat-badge">📊 {{ poll.options.count }} seçenek</span>
+      <span class="stat-badge">🗳️ {{ poll.total_votes }} oy</span>
+    </div>
+  </div>
+  <div class="poll-card-footer">
+    <a href="{% url 'polls:detail' poll.pk %}" class="btn btn-primary btn-sm">Oy ver</a>
+  </div>
+</article>

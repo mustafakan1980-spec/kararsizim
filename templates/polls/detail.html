@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{ poll.question }} — Kararsızım{% endblock %}
+
+{% block content %}
+<div class="detail-wrapper">
+  <div class="detail-card" id="pollDetailCard" data-vote-url="{% url 'polls:vote' poll.pk %}" data-has-voted="{% if my_option_id %}true{% else %}false{% endif %}">
+    <!-- Üst bilgi -->
+    <div class="detail-header">
+      <h1 class="detail-question">{{ poll.question }}</h1>
+      <div class="detail-meta">
+        <a href="{% url 'accounts:profile' poll.author.username %}" class="poll-author">@{{ poll.author.username }}</a>
+        <span class="meta-dot">·</span>
+        <span class="poll-time">{{ poll.created_at|naturaltime }}</span>
+      </div>
+    </div>
+
+    <!-- Seçenekler & Canlı Sonuçlar -->
+    <div class="options-list {% if my_option_id %}show-results{% endif %}" id="optionsList">
+      {% for opt in results.options %}
+        <button
+          type="button"
+          class="vote-option color-{{ forloop.counter0 }} {% if my_option_id == opt.id %}is-selected{% endif %}"
+          data-option-id="{{ opt.id }}"
+          data-percent="{{ opt.percent }}"
+          data-votes="{{ opt.votes }}"
+        >
+          <div class="vote-progress" style="width: {% if my_option_id %}{{ opt.percent }}%{% else %}0%{% endif %};"></div>
+          <div class="vote-content">
+            <span class="vote-label-group">
+              <span class="vote-text">{{ opt.text }}</span>
+              <span class="vote-check" {% if my_option_id != opt.id %}hidden{% endif %}>✓</span>
+            </span>
+            <span class="vote-stats" {% if not my_option_id %}hidden{% endif %}>
+              <span class="vote-percent">{{ opt.percent }}%</span>
+              <span class="vote-count">({{ opt.votes }})</span>
+            </span>
+          </div>
+        </button>
+      {% endfor %}
+    </div>
+
+    <!-- Alt Bilgi: Toplam Oy & Sonuçları Gör -->
+    <div class="detail-footer-meta">
+      <div class="vote-summary" id="voteSummary" {% if not my_option_id %}hidden{% endif %}>
+        <span class="total-votes">Toplam <strong id="totalVotesCount">{{ results.total }}</strong> oy</span>
+        <span class="vote-hint">Değiştirmek için başka seçeneğe tıkla</span>
+      </div>
+      {% if not my_option_id %}
+        <button type="button" id="showResultsBtn" class="btn-link">Oy vermeden sonuçları gör</button>
+      {% endif %}
+    </div>
+
+    <!-- Silme butonu (yalnızca anketin sahibi görür) -->
+    {% if user == poll.author %}
+    <div class="detail-actions">
+      <button type="button" class="btn btn-danger btn-sm" id="deleteBtn" onclick="document.getElementById('deleteModal').style.display='flex'">
+        🗑️ Anketi Sil
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Silme Onay Modalı -->
+{% if user == poll.author %}
+<div class="modal-overlay" id="deleteModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <h2 class="modal-title" id="modalTitle">Anketi silmek istediğinden emin misin?</h2>
+    <p class="modal-desc">Bu işlem geri alınamaz.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('deleteModal').style.display='none'">Vazgeç</button>
+      <form method="post" action="{% url 'polls:delete' poll.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm">Evet, sil</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vote.js' %}"></script>
+{% endblock %}

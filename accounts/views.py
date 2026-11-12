@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
@@ -70,6 +71,14 @@ def logout_view(request):
 def profile_view(request, username):
     """Kullanıcı profil sayfası (e-posta asla gösterilmez)."""
     profile_user = get_object_or_404(User, username__iexact=username)
+    polls = (
+        profile_user.polls
+        .filter(is_active=True)
+        .prefetch_related('options')
+        .annotate(total_votes=Count('votes'))
+        .order_by('-created_at')
+    )
     return render(request, 'accounts/profile.html', {
         'profile_user': profile_user,
+        'polls': polls,
     })

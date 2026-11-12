@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Anket Oluştur — Kararsızım{% endblock %}
+
+{% block content %}
+<div class="create-wrapper">
+  <div class="create-card">
+    <div class="create-header">
+      <h1 class="create-title">Yeni Anket 🤔</h1>
+      <p class="create-subtitle">Kararsız kaldığın soruyu sor, topluluk karar versin.</p>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="form-alert form-alert-danger">
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'polls:create' %}" id="pollCreateForm" class="create-form" novalidate>
+      {% csrf_token %}
+
+      <!-- Soru -->
+      <div class="form-group">
+        <label for="id_question" class="form-label">
+          Soru <span class="char-counter" id="questionCounter">0 / 150</span>
+        </label>
+        {{ form.question }}
+        {% for error in form.question.errors %}
+          <span class="field-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Seçenekler -->
+      <div class="form-group">
+        <label class="form-label">Seçenekler <span class="form-help">(en az 2, en fazla 5)</span></label>
+        <div id="optionsContainer" class="options-container">
+          {% for opt in submitted_options %}
+          <div class="option-row" data-index="{{ forloop.counter0 }}">
+            <input type="text" name="option_{{ forloop.counter0 }}" value="{{ opt }}" class="form-input option-input" placeholder="Seçenek {{ forloop.counter }}" maxlength="80">
+            <button type="button" class="btn-remove-option" aria-label="Seçeneği sil" style="display:none">✕</button>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" id="addOptionBtn" class="btn btn-secondary btn-sm add-option-btn">＋ Seçenek ekle</button>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Anketi Yayınla 🚀</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/poll_form.js"></script>
+{% endblock %}

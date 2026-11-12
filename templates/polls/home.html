@@ -1,18 +1,50 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
-{% block title %}Kararsızım yakında 🤔{% endblock %}
+{% block title %}Kararsızım — Neye karar veremiyorsun?{% endblock %}
 
 {% block content %}
-<div class="hero-card">
-  <span class="badge">Faz 0: Kurulum Tamamlandı 🚀</span>
-  <div class="hero-emoji">🤔</div>
-  <h1 class="hero-title">Kararsızım yakında!</h1>
-  <p class="hero-description">
-    İnsanların kararsız kaldığı konularda birbirine danışabildiği anket platformu hazırlanıyor.
-    Altyapı ve veritabanı bağlantısı başarıyla kuruldu.
-  </p>
-  <div>
-    <a href="/admin/" class="btn btn-primary">Django Yönetim Paneli</a>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg-circle hero-circle-1"></div>
+  <div class="hero-bg-circle hero-circle-2"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Kararsız mı kaldın?<br>Sor, herkes oylasın 🤔</h1>
+    <p class="hero-subtitle">Aklına takılan soruyu sor, topluluk karar versin.</p>
+    <a href="{% url 'polls:create' %}" class="btn btn-primary btn-hero">＋ Anket Oluştur</a>
   </div>
-</div>
+</section>
+
+<!-- Anket Akışı -->
+<section class="polls-section">
+  {% if page_obj.object_list %}
+    <div class="polls-grid">
+      {% for poll in page_obj %}
+        {% include 'partials/poll_card.html' with poll=poll %}
+      {% endfor %}
+    </div>
+
+    <!-- Sayfalama -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?sayfa={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm">← Önceki</a>
+      {% endif %}
+      <span class="page-info">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a href="?sayfa={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Sonraki →</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  {% else %}
+    <!-- Boş durum -->
+    <div class="empty-state">
+      <div class="empty-icon">🤔</div>
+      <p class="empty-text">Henüz anket yok.</p>
+      <p class="empty-subtext">İlk kararsız sen ol!</p>
+      <a href="{% url 'polls:create' %}" class="btn btn-primary btn-sm">＋ Anket oluştur</a>
+    </div>
+  {% endif %}
+</section>
 {% endblock %}
