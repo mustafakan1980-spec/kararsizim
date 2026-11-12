@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Sunucu Hatası (500) — Kararsızım{% endblock %}
+
+{% block content %}
+<div class="error-page-wrapper">
+  <div class="error-card">
+    <div class="error-emoji">⚡</div>
+    <span class="badge badge-danger">Hata 500</span>
+    <h1 class="error-title">Bir Şeyler Ters Gitti!</h1>
+    <p class="error-description">
+      Sunucumuzda geçici bir sorun meydana geldi. Ekibimiz ilgileniyor. Lütfen biraz sonra tekrar dene.
+    </p>
+    <div class="error-actions">
+      <a href="{% url 'polls:home' %}" class="btn btn-primary">Ana Sayfaya Dön 🏠</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

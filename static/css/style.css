@@ -1134,3 +1134,166 @@ a {
 .btn-link:hover {
   color: var(--primary);
 }
+
+
+/* ============================================================
+   Faz 4 Stilleri — Arayüz Cilası, Nasıl Çalışır, Hata Sayfaları
+   ============================================================ */
+
+/* Nasıl Çalışır (3 Adım) */
+.how-it-works {
+  margin-bottom: 48px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .steps-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.step-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.step-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Bölüm Başlığı & Sayaç */
+.polls-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.polls-count {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Footer Düzeni */
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* Hata Sayfaları (404, 500) */
+.error-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+  min-height: 50vh;
+}
+
+.error-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 56px 36px;
+  text-align: center;
+  max-width: 540px;
+  width: 100%;
+}
+
+.error-emoji {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.badge-warning {
+  background: rgba(255, 209, 102, 0.2);
+  color: #a07800;
+}
+
+.badge-danger {
+  background: rgba(255, 107, 157, 0.15);
+  color: var(--pink);
+}
+
+.error-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin: 16px 0 12px;
+}
+
+.error-description {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 360px, 768px, 1280px İnce Ayarları */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.55rem;
+  }
+  .hero {
+    padding: 32px 18px;
+  }
+  .error-card {
+    padding: 36px 20px;
+  }
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}

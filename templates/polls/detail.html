@@ -3,6 +3,9 @@
 {% load static %}
 
 {% block title %}{{ poll.question }} — Kararsızım{% endblock %}
+{% block og_title %}{{ poll.question }} — Kararsızım{% endblock %}
+{% block meta_description %}"{{ poll.question }}" anketine oy ver ve sonuçları gör!{% endblock %}
+{% block og_description %}Topluluk kararsız kaldı, senin oyun belirleyici olabilir. Hemen oy ver!{% endblock %}
 
 {% block content %}
 <div class="detail-wrapper">

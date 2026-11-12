@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Sayfa Bulunamadı (404) — Kararsızım{% endblock %}
+
+{% block content %}
+<div class="error-page-wrapper">
+  <div class="error-card">
+    <div class="error-emoji">🧭</div>
+    <span class="badge badge-warning">Hata 404</span>
+    <h1 class="error-title">Aradığın Sayfa Kaybolmuş!</h1>
+    <p class="error-description">
+      Baktığın anket silinmiş veya yanlış bir adrese gelmiş olabilirsin. Kararsız kalma, ana sayfadan yeni anketlere göz at!
+    </p>
+    <div class="error-actions">
+      <a href="{% url 'polls:home' %}" class="btn btn-primary">Ana Sayfaya Dön 🏠</a>
+      <a href="{% url 'polls:create' %}" class="btn btn-secondary">Anket Oluştur 🤔</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -9,14 +9,43 @@
   <div class="hero-bg-circle hero-circle-1"></div>
   <div class="hero-bg-circle hero-circle-2"></div>
   <div class="hero-content">
+    <span class="badge">Topluluğun Karar Platformu 🎯</span>
     <h1 class="hero-title">Kararsız mı kaldın?<br>Sor, herkes oylasın 🤔</h1>
-    <p class="hero-subtitle">Aklına takılan soruyu sor, topluluk karar versin.</p>
-    <a href="{% url 'polls:create' %}" class="btn btn-primary btn-hero">＋ Anket Oluştur</a>
+    <p class="hero-subtitle">İki seçenek arasında mı kaldın? Sorunu paylaş, topluluk senin için oylasın.</p>
+    <div class="hero-cta">
+      <a href="{% url 'polls:create' %}" class="btn btn-primary btn-hero">＋ Hemen Anket Oluştur</a>
+    </div>
+  </div>
+</section>
+
+<!-- Nasıl Çalışır? (3 Adım) -->
+<section class="how-it-works">
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-icon">💡</div>
+      <h3 class="step-title">1. Sor</h3>
+      <p class="step-desc">Aklındaki soruyu ve 2–5 seçeneği belirle, anketini saniyeler içinde aç.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-icon">📣</div>
+      <h3 class="step-title">2. Paylaş</h3>
+      <p class="step-desc">Anketin tüm toplulukla buluşsun, herkes anında oy kullanmaya başlasın.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-icon">📊</div>
+      <h3 class="step-title">3. Oyla & Gör</h3>
+      <p class="step-desc">Sonuçları canlı yüzde çubuklarıyla izle, kararsızlığı birlikte çözün.</p>
+    </div>
   </div>
 </section>
 
 <!-- Anket Akışı -->
 <section class="polls-section">
+  <div class="polls-section-header">
+    <h2 class="section-title">En Yeni Anketler 🔥</h2>
+    <span class="polls-count">{{ page_obj.paginator.count }} anket yayında</span>
+  </div>
+
   {% if page_obj.object_list %}
     <div class="polls-grid">
       {% for poll in page_obj %}
@@ -42,8 +71,8 @@
     <div class="empty-state">
       <div class="empty-icon">🤔</div>
       <p class="empty-text">Henüz anket yok.</p>
-      <p class="empty-subtext">İlk kararsız sen ol!</p>
-      <a href="{% url 'polls:create' %}" class="btn btn-primary btn-sm">＋ Anket oluştur</a>
+      <p class="empty-subtext">İlk kararsız sen ol, topluluk sana fikir versin!</p>
+      <a href="{% url 'polls:create' %}" class="btn btn-primary btn-sm">＋ İlk Anketi Oluştur</a>
     </div>
   {% endif %}
 </section>
