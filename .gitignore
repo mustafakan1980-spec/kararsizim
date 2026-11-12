@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Ortam değişkenleri
+.env
+.env.local
+
+# Veritabanı (yerel SQLite)
+*.sqlite3
+db.sqlite3
+
+# Statik dosyalar (collectstatic çıktısı)
+staticfiles/
+
+# Sanal ortam
+.venv/
+env/
+venv/
+ENV/
+
+# IDE & Editörler
+.idea/
+.vscode/
+.cursor/
+
+# Vercel
+.vercel/
+
+# Loglar
+*.log

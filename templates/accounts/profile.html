@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}@{{ profile_user.username }} — Profil — Kararsızım{% endblock %}
+
+{% block content %}
+<div class="profile-card-wrapper">
+  <div class="profile-header-card">
+    <div class="profile-avatar">
+      {{ profile_user.username|slice:":1"|upper }}
+    </div>
+    <div class="profile-info">
+      <h1 class="profile-username">@{{ profile_user.username }}</h1>
+      <p class="profile-meta">
+        {{ profile_user.date_joined|date:"d F Y" }} tarihinde katıldı
+      </p>
+    </div>
+  </div>
+
+  <div class="profile-polls-section">
+    <h2 class="section-title">Anketler</h2>
+    <div class="empty-state">
+      <div class="empty-icon">📊</div>
+      <p class="empty-text">Henüz anket yok.</p>
+      {% if user == profile_user %}
+        <p class="empty-subtext">Aklına takılan bir soru mu var? Hemen bir anket oluşturup insanlara sorabilirsin!</p>
+        <a href="/anket/yeni/" class="btn btn-primary btn-sm">＋ Anket oluştur</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

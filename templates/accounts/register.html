@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Üye Ol — Kararsızım{% endblock %}
+
+{% block content %}
+<div class="auth-card-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-emoji">👋</div>
+      <h1 class="auth-title">Aramıza Katıl</h1>
+      <p class="auth-subtitle">Kararsız kaldığın her şeyi sor, birlikte karar verelim.</p>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="form-alert form-alert-danger">
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'accounts:register' %}" class="auth-form" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+        {{ form.username }}
+        {% if form.username.help_text %}
+          <span class="form-help">{{ form.username.help_text }}</span>
+        {% endif %}
+        {% for error in form.username.errors %}
+          <span class="field-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+          <span class="field-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% for error in form.password.errors %}
+          <span class="field-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.password_confirm.id_for_label }}" class="form-label">{{ form.password_confirm.label }}</label>
+        {{ form.password_confirm }}
+        {% for error in form.password_confirm.errors %}
+          <span class="field-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Hesap Oluştur</button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Zaten bir hesabın var mı? <a href="{% url 'accounts:login' %}" class="link-primary">Giriş yap</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
