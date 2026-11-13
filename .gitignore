@@ -32,3 +32,6 @@ ENV/
 
 # Loglar
 *.log
+
+.vercel
+.env*
