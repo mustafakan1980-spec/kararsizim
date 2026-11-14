@@ -1,3 +1,4 @@
+import re
 import uuid
 from django.db.models import Count
 
@@ -5,12 +6,18 @@ from .models import Vote
 
 ANON_COOKIE_NAME = 'kz_anon'
 ANON_COOKIE_MAX_AGE = 60 * 60 * 24 * 365  # 1 yıl
+ANON_TOKEN_PATTERN = re.compile(r'^[0-9a-fA-F]{32}$')
+
+
+def is_valid_anon_token(token):
+    """Anonim oy token'ının geçerli 32 karakterlik hex UUID formatında olup olmadığını denetler."""
+    return bool(token and isinstance(token, str) and ANON_TOKEN_PATTERN.match(token))
 
 
 def get_anon_token(request):
-    """İstek çerezinden anonim oy token'ını okur."""
+    """İstek çerezinden anonim oy token'ını okur ve doğrular."""
     token = request.COOKIES.get(ANON_COOKIE_NAME, '').strip()
-    if token and len(token) <= 64:
+    if is_valid_anon_token(token):
         return token
     return None
 

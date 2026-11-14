@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 
+from config.throttling import get_client_ip, is_rate_limited
 from .forms import PollCreateForm
 from .models import Option, Poll, Vote
 from .utils import (
@@ -112,6 +113,15 @@ def poll_detail(request, pk):
 @require_POST
 def poll_vote(request, pk):
     """JSON oy verme uç noktası (üye ve misafir)."""
+    # Hız sınırlama denetimi (IP bazlı - bot ve kaba kuvvet spamini engeller)
+    client_ip = get_client_ip(request)
+    limited, retry_after = is_rate_limited('vote', client_ip, limit=20, period=60)
+    if limited:
+        return JsonResponse(
+            {'ok': False, 'error': f'Çok hızlı oy kullanıyorsunuz. Lütfen {retry_after} saniye bekleyin.'},
+            status=429
+        )
+
     poll = Poll.objects.filter(pk=pk, is_active=True).first()
     if poll is None:
         return JsonResponse(
@@ -121,6 +131,10 @@ def poll_vote(request, pk):
 
     try:
         data = json.loads(request.body.decode('utf-8'))
+        # Bot koruması (honeypot alanı doluysa reddet)
+        if data.get('website') or data.get('hp_field'):
+            return JsonResponse({'ok': False, 'error': 'İstek reddedildi.'}, status=400)
+
         option_id = int(data.get('option_id'))
     except (ValueError, TypeError, json.JSONDecodeError):
         return JsonResponse(

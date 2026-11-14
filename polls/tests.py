@@ -269,3 +269,33 @@ class PollsFaz3VoteTests(TestCase):
         raw_json = vote_res.content.decode('utf-8')
         self.assertNotIn('oyveren@example.com', raw_json)
         self.assertNotIn('@example.com', raw_json)
+
+    def test_vote_honeypot_rejection(self):
+        """Bot honeypot alanı doldurulduğunda oy verme isteği 400 ile reddedilmeli."""
+        response = self.client.post(
+            self.vote_url,
+            data={'option_id': self.opt1.pk, 'website': 'http://spambot.com'},
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(response.json()['ok'])
+
+    def test_vote_rate_limiting(self):
+        """Çok hızlı oy kullanma girişiminde 429 döndürülmeli."""
+        from django.core.cache import cache
+        cache.clear()
+
+        for _ in range(20):
+            self.client.post(
+                self.vote_url,
+                data={'option_id': self.opt1.pk},
+                content_type='application/json'
+            )
+        blocked_response = self.client.post(
+            self.vote_url,
+            data={'option_id': self.opt1.pk},
+            content_type='application/json'
+        )
+        self.assertEqual(blocked_response.status_code, 429)
+        self.assertFalse(blocked_response.json()['ok'])
+        cache.clear()

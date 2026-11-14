@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
+from config.throttling import get_client_ip, is_rate_limited
 from .forms import LoginForm, RegisterForm
 
 User = get_user_model()
@@ -17,6 +18,15 @@ def register_view(request):
         return redirect('polls:home')
 
     if request.method == 'POST':
+        ip = get_client_ip(request)
+        limited, retry_after = is_rate_limited('register', ip, limit=5, period=60)
+        if limited:
+            messages.error(
+                request,
+                f'Çok fazla kayıt denemesi yapıldı. Lütfen {retry_after} saniye sonra tekrar deneyin.'
+            )
+            return render(request, 'accounts/register.html', {'form': RegisterForm(request.POST)}, status=429)
+
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
@@ -37,6 +47,18 @@ def login_view(request):
     next_url = request.GET.get('next') or request.POST.get('next') or ''
 
     if request.method == 'POST':
+        ip = get_client_ip(request)
+        limited, retry_after = is_rate_limited('login', ip, limit=10, period=60)
+        if limited:
+            messages.error(
+                request,
+                f'Çok fazla giriş denemesi yapıldı. Lütfen {retry_after} saniye sonra tekrar deneyin.'
+            )
+            return render(request, 'accounts/login.html', {
+                'form': LoginForm(request.POST),
+                'next': next_url,
+            }, status=429)
+
         form = LoginForm(request.POST)
         if form.is_valid():
             user = form.get_user()

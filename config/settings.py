@@ -15,6 +15,14 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-degistir-beni')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
+# Üretim ortamında SECRET_KEY katı doğrulaması
+if not DEBUG:
+    if not SECRET_KEY or SECRET_KEY.startswith('django-insecure-'):
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            "Üretim ortamında (DEBUG=False) güvenli ve güçlü bir SECRET_KEY tanımlanmalıdır!"
+        )
+
 ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app').split(',') if h.strip()]
 if 'testserver' not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append('testserver')
@@ -23,11 +31,27 @@ if 'testserver' not in ALLOWED_HOSTS:
 _csrf_origins = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app')
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins.split(',') if o.strip()]
 
-# Production SSL / Güvenlik Ayarları
+# Güvenlik ve SSL Ayarları
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 yıl
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+# Cache Ayarları (Hız sınırlama / throttling ve geçici önbellek)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'kararsizim-cache',
+    }
+}
 
 # Özel Kullanıcı Modeli (ilk migration'dan önce ayarlanmalı)
 AUTH_USER_MODEL = 'accounts.User'
@@ -48,6 +72,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'config.middleware.SecurityHeadersMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

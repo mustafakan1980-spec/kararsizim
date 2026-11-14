@@ -162,3 +162,29 @@ class AccountsTests(TestCase):
         self.assertIn('@mevcut_kullanici', content)
         self.assertNotIn('mevcut@example.com', content)
         self.assertNotIn('@example.com', content)
+
+    def test_security_headers_present(self):
+        """CSP ve modern güvenlik başlıkları yanıtta bulunmalı."""
+        response = self.client.get(self.login_url)
+        self.assertIn('Content-Security-Policy', response.headers)
+        self.assertIn('Permissions-Policy', response.headers)
+        self.assertIn('Cross-Origin-Opener-Policy', response.headers)
+        self.assertEqual(response.headers.get('X-Content-Type-Options'), 'nosniff')
+
+    def test_login_rate_limiting(self):
+        """Aşırı sayıda ardışık giriş denemesi 429 Hız Sınırı Aşıldı döndürmeli."""
+        from django.core.cache import cache
+        cache.clear()
+
+        # 10 deneme limiti tanımlandı
+        for _ in range(10):
+            self.client.post(self.login_url, {
+                'login': 'yanlis_kullanici',
+                'password': 'YanlisSifre!'
+            })
+        blocked_response = self.client.post(self.login_url, {
+            'login': 'yanlis_kullanici',
+            'password': 'YanlisSifre!'
+        })
+        self.assertEqual(blocked_response.status_code, 429)
+        cache.clear()
